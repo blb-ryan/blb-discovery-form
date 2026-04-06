@@ -17,22 +17,50 @@ export const sections = [
     time: 'About 1 minute',
     questions: [
       {
-        id: 'contact_name',
-        text: 'What\'s your full name?',
+        id: 'contact_first_name',
+        text: 'What\'s your first name?',
         type: 'text',
-        placeholder: 'Jane Doe',
+        placeholder: 'Jane',
+        required: true,
+        hideIDK: true,
+      },
+      {
+        id: 'contact_last_name',
+        text: 'And your last name?',
+        type: 'text',
+        placeholder: 'Doe',
+        required: true,
+        hideIDK: true,
       },
       {
         id: 'contact_email',
         text: 'What\'s your email address?',
         type: 'email',
         placeholder: 'jane@company.com',
+        required: true,
+        hideIDK: true,
+        validate: (val) => {
+          if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+            return 'Please enter a valid email address.';
+          }
+          return null;
+        },
       },
       {
         id: 'contact_phone',
         text: 'What\'s your phone number?',
         type: 'tel',
         placeholder: '(555) 123-4567',
+        required: true,
+        hideIDK: true,
+        validate: (val) => {
+          if (!val) return 'Please enter a phone number.';
+          const digits = val.replace(/\D/g, '');
+          if (digits.length < 7) {
+            return 'Please enter a valid phone number.';
+          }
+          return null;
+        },
       },
     ],
   },

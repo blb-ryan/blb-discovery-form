@@ -27,7 +27,7 @@ export function buildNotionProperties(answers, iDontKnowCount) {
 
   const properties = {
     'Company Name': answers.company_name || 'Unnamed Submission',
-    'Contact Name': answers.contact_name || '',
+    'Contact Name': [answers.contact_first_name, answers.contact_last_name].filter(Boolean).join(' ') || '',
     'Email': answers.contact_email || '',
     'Phone': answers.contact_phone || '',
     'Complexity Score': complexity.score,

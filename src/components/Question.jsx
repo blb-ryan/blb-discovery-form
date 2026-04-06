@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 const IDK_VALUE = "I don't know yet";
 
@@ -16,9 +16,11 @@ export default function Question({
   const inputRef = useRef(null);
   const animRef = useRef(null);
   const isIDK = value === IDK_VALUE;
+  const [error, setError] = useState(null);
 
-  // Focus input on mount
+  // Focus input on mount + clear error
   useEffect(() => {
+    setError(null);
     const timer = setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus();
@@ -42,16 +44,29 @@ export default function Question({
   const handleChange = (e) => {
     onChange(question.id, e.target.value);
     autoExpand(e.target);
+    if (error) setError(null);
+  };
+
+  const tryAdvance = () => {
+    if (question.validate) {
+      const err = question.validate(value);
+      if (err) {
+        setError(err);
+        return;
+      }
+    }
+    setError(null);
+    onNext();
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && question.type !== 'textarea') {
       e.preventDefault();
-      if (value || isIDK) onNext();
+      if (value || isIDK) tryAdvance();
     }
     if (e.key === 'Enter' && question.type === 'textarea' && e.metaKey) {
       e.preventDefault();
-      if (value || isIDK) onNext();
+      if (value || isIDK) tryAdvance();
     }
   };
 
@@ -188,14 +203,21 @@ export default function Question({
         )}
       </div>
 
+      {error && (
+        <p className="question-error">{error}</p>
+      )}
+
       <div className="question-actions">
-        <button
-          className="btn btn-ghost question-idk-btn"
-          onClick={handleIDK}
-          type="button"
-        >
-          I don't know yet
-        </button>
+        {!question.hideIDK && (
+          <button
+            className="btn btn-ghost question-idk-btn"
+            onClick={handleIDK}
+            type="button"
+          >
+            I don't know yet
+          </button>
+        )}
+        {question.hideIDK && <div />}
 
         <div className="question-nav">
           <button
@@ -211,7 +233,7 @@ export default function Question({
 
           <button
             className="btn btn-primary question-next-btn"
-            onClick={onNext}
+            onClick={tryAdvance}
             disabled={!canAdvance}
             type="button"
           >
@@ -329,6 +351,13 @@ export default function Question({
           justify-content: space-between;
           gap: var(--space-md);
           flex-wrap: wrap;
+        }
+
+        .question-error {
+          font-size: 0.875rem;
+          color: var(--error);
+          font-weight: var(--font-weight-medium);
+          margin-bottom: var(--space-sm);
         }
 
         .question-idk-btn {

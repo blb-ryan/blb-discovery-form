@@ -110,7 +110,7 @@ export default function FormContainer() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-top: 96px; /* space for unified progress header */
+          padding-top: 64px; /* space for progress header (no dots) */
         }
       `}</style>
     </div>
