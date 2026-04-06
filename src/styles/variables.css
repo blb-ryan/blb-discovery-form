@@ -1,0 +1,59 @@
+:root {
+  /* Background */
+  --bg-primary: #1A1C15;
+  --bg-secondary: #20221A;
+  --bg-card: #252720;
+  --bg-card-alt: #2E3027;
+  --bg-hover: #33362E;
+
+  /* Text */
+  --text-primary: #EAE3DE;
+  --text-muted: rgba(234, 227, 222, 0.5);
+  --text-dim: rgba(234, 227, 222, 0.3);
+
+  /* Accent */
+  --accent: #D48950;
+  --accent-hover: #E09A62;
+  --accent-dim: rgba(212, 137, 80, 0.14);
+  --accent-glow: rgba(212, 137, 80, 0.25);
+
+  /* Border */
+  --border: rgba(234, 227, 222, 0.10);
+  --border-accent: #D48950;
+
+  /* Semantic */
+  --success: #7BC47F;
+  --error: #E05C5C;
+
+  /* Typography */
+  --font-family: 'Sora', -apple-system, system-ui, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Layout */
+  --max-width: 660px;
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease-out;
+  --transition-slow: 500ms cubic-bezier(0.45, 0, 0.43, 0.99);
+
+  /* Z-index */
+  --z-progress: 100;
+  --z-banner: 90;
+  --z-overlay: 200;
+}
