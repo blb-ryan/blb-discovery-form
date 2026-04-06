@@ -15,7 +15,7 @@ export default function WelcomeScreen({ onStart, hasProgress }) {
         <p className="welcome-body">
           This questionnaire is how we get to know your business, your market,
           and what you're building toward. Your answers shape everything we do
-          together — from strategy to creative direction.
+          together, from strategy to creative direction.
         </p>
 
         <p className="welcome-body">
@@ -30,7 +30,7 @@ export default function WelcomeScreen({ onStart, hasProgress }) {
           </div>
           <div className="welcome-detail">
             <span className="welcome-detail-icon">{'\u{1F4BE}'}</span>
-            <span>Your progress saves automatically — come back any time</span>
+            <span>Your progress saves automatically. Come back any time.</span>
           </div>
           <div className="welcome-detail">
             <span className="welcome-detail-icon">{'\u{1F914}'}</span>
