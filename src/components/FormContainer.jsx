@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useFormState } from '../hooks/useFormState';
 import { useFirestore } from '../hooks/useFirestore';
-import Header from './Header';
 import WelcomeScreen from './WelcomeScreen';
 import Question from './Question';
 import SectionIntro from './SectionIntro';
@@ -61,7 +60,6 @@ export default function FormContainer() {
 
   return (
     <div className="form-container">
-      <Header minimal />
       <ProgressBar
         progress={progress}
         sectionIndex={sectionIndex}
@@ -112,7 +110,7 @@ export default function FormContainer() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-top: 88px; /* space for header + progress bar */
+          padding-top: 96px; /* space for unified progress header */
         }
       `}</style>
     </div>

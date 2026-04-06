@@ -9,6 +9,22 @@ export default function ProgressBar({
 }) {
   return (
     <div className="progress-container">
+      <div className="progress-top">
+        <a href={`${import.meta.env.BASE_URL}#/`} className="progress-logo-link">
+          <img
+            src={`${import.meta.env.BASE_URL}blb-logo-white.svg`}
+            alt="Brave Little Beast"
+            className="progress-logo"
+          />
+        </a>
+
+        <span className="progress-section-name">{sectionName}</span>
+
+        <span className="progress-percent">
+          {Math.round(progress * 100)}%
+        </span>
+      </div>
+
       <div className="progress-bar-track">
         <div
           className="progress-bar-fill"
@@ -16,7 +32,7 @@ export default function ProgressBar({
         />
       </div>
 
-      <div className="progress-info">
+      <div className="progress-dots-row">
         <div className="progress-dots">
           {sections.map((section, idx) => (
             <button
@@ -38,23 +54,56 @@ export default function ProgressBar({
             />
           ))}
         </div>
-
-        <span className="progress-section-name">{sectionName}</span>
-        <span className="progress-percent">
-          {Math.round(progress * 100)}%
-        </span>
       </div>
 
       <style>{`
         .progress-container {
           position: fixed;
-          top: 44px;
+          top: 0;
           left: 0;
           right: 0;
           z-index: var(--z-progress);
           background: var(--bg-primary);
           border-bottom: 1px solid var(--border);
-          padding: 0;
+        }
+
+        .progress-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: var(--space-sm) var(--space-lg);
+        }
+
+        .progress-logo-link {
+          display: inline-flex;
+          flex-shrink: 0;
+          transition: opacity var(--transition-fast);
+        }
+
+        .progress-logo-link:hover {
+          opacity: 0.7;
+        }
+
+        .progress-logo {
+          height: 36px;
+          width: auto;
+        }
+
+        .progress-section-name {
+          font-size: 0.75rem;
+          font-weight: var(--font-weight-medium);
+          letter-spacing: 0.05em;
+          color: var(--text-dim);
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        .progress-percent {
+          font-size: 0.6875rem;
+          font-weight: var(--font-weight-semibold);
+          color: var(--text-dim);
+          flex-shrink: 0;
         }
 
         .progress-bar-track {
@@ -70,13 +119,10 @@ export default function ProgressBar({
           border-radius: 0 2px 2px 0;
         }
 
-        .progress-info {
+        .progress-dots-row {
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: var(--space-sm) var(--space-lg);
-          max-width: 900px;
-          margin: 0 auto;
+          justify-content: center;
+          padding: 6px var(--space-lg);
         }
 
         .progress-dots {
@@ -118,26 +164,21 @@ export default function ProgressBar({
           background: var(--success);
         }
 
-        .progress-section-name {
-          font-size: 0.6875rem;
-          font-weight: var(--font-weight-medium);
-          letter-spacing: 0.05em;
-          color: var(--text-dim);
-          flex: 1;
-          text-align: center;
-        }
-
-        .progress-percent {
-          font-size: 0.6875rem;
-          font-weight: var(--font-weight-semibold);
-          color: var(--text-dim);
-          min-width: 32px;
-          text-align: right;
-        }
-
         @media (max-width: 600px) {
-          .progress-info {
+          .progress-top {
             padding: var(--space-xs) var(--space-md);
+          }
+
+          .progress-logo {
+            height: 28px;
+          }
+
+          .progress-section-name {
+            display: none;
+          }
+
+          .progress-dots-row {
+            padding: 4px var(--space-md);
           }
 
           .progress-dots {
@@ -147,10 +188,6 @@ export default function ProgressBar({
           .progress-dot {
             width: 6px;
             height: 6px;
-          }
-
-          .progress-section-name {
-            display: none;
           }
         }
       `}</style>
