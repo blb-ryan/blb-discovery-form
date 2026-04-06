@@ -1,6 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useFormState } from '../hooks/useFormState';
 import { useFirestore } from '../hooks/useFirestore';
+import { callApi } from '../utils/api';
+import { getRecaptchaToken } from '../utils/recaptcha';
 import WelcomeScreen from './WelcomeScreen';
 import Question from './Question';
 import SectionIntro from './SectionIntro';
@@ -34,7 +36,7 @@ export default function FormContainer() {
   } = useFormState();
 
   // Firestore session persistence (gracefully no-ops without config)
-  useFirestore({
+  const { saveNow } = useFirestore({
     sessionId,
     answers,
     iDontKnowCount,
@@ -43,13 +45,51 @@ export default function FormContainer() {
     restoreState,
   });
 
+  // Submission state
+  const [submissionStatus, setSubmissionStatus] = useState('idle'); // idle | submitting | success | error
+  const hasSubmitted = useRef(false);
+
+  // Trigger submission when form completes
+  useEffect(() => {
+    if (!isComplete || hasSubmitted.current) return;
+    hasSubmitted.current = true;
+
+    (async () => {
+      setSubmissionStatus('submitting');
+      try {
+        // Flush Firestore save first
+        if (saveNow) await saveNow();
+        // Small delay to ensure Firestore write propagates
+        await new Promise((r) => setTimeout(r, 500));
+
+        const recaptchaToken = await getRecaptchaToken('submit_discovery');
+        const result = await callApi('/api/submit-discovery', { sessionId, recaptchaToken });
+        setSubmissionStatus('success');
+      } catch (err) {
+        console.error('[Submit] Error:', err);
+        setSubmissionStatus('error');
+        hasSubmitted.current = false; // allow retry
+      }
+    })();
+  }, [isComplete, sessionId, saveNow]);
+
   // Scroll to top on question/section change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [sectionIndex, questionIndex, showSectionIntro]);
 
   if (isComplete) {
-    return <CompletionScreen />;
+    return (
+      <CompletionScreen
+        status={submissionStatus}
+        onRetry={() => {
+          hasSubmitted.current = false;
+          setSubmissionStatus('idle');
+          // Re-trigger by toggling
+          setTimeout(() => { hasSubmitted.current = false; }, 0);
+        }}
+      />
+    );
   }
 
   if (showWelcome) {

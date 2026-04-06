@@ -1,27 +1,38 @@
 import { useState } from 'react';
+import { callApi } from '../utils/api';
+import { getRecaptchaToken } from '../utils/recaptcha';
 
 export default function MagicLinkBanner({ email, sessionId }) {
-  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error | rateLimit
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSave = async () => {
     if (!email) {
       setStatus('error');
+      setErrorMsg('Enter your email first');
       return;
     }
 
     setStatus('sending');
 
-    // TODO: Replace with Cloud Function call when backend is built
-    // For now, just show the link in console for development
-    const resumeUrl = `${window.location.origin}${window.location.pathname}#/?session=${sessionId}`;
-    console.log('[Magic Link] Resume URL:', resumeUrl);
-    console.log('[Magic Link] Would email to:', email);
-
-    // Simulate success
-    setTimeout(() => {
+    try {
+      const recaptchaToken = await getRecaptchaToken('send_magic_link');
+      await callApi('/api/send-magic-link', { email, sessionId, recaptchaToken });
       setStatus('sent');
-      setTimeout(() => setStatus('idle'), 4000);
-    }, 800);
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (err) {
+      if (err.status === 429) {
+        const retryAfter = err.data?.retryAfter || 300;
+        setStatus('rateLimit');
+        setErrorMsg(`Please wait ${Math.ceil(retryAfter / 60)} min before requesting another link`);
+        setTimeout(() => setStatus('idle'), 5000);
+      } else {
+        console.error('[MagicLink] Error:', err);
+        setStatus('error');
+        setErrorMsg('Something went wrong. Try again.');
+        setTimeout(() => setStatus('idle'), 4000);
+      }
+    }
   };
 
   return (
@@ -42,8 +53,8 @@ export default function MagicLinkBanner({ email, sessionId }) {
             </svg>
             Link sent!
           </>
-        ) : status === 'error' ? (
-          'Enter your email first'
+        ) : status === 'error' || status === 'rateLimit' ? (
+          errorMsg
         ) : (
           <>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

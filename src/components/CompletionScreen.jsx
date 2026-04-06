@@ -1,19 +1,44 @@
-export default function CompletionScreen() {
+export default function CompletionScreen({ status, onRetry }) {
   return (
     <div className="completion-screen celebrate-in">
       <div className="completion-content">
-        {/* Placeholder celebration — BLB will replace */}
-        <div className="completion-celebration">
-          <span className="completion-emoji">{'\u{1F389}'}</span>
-        </div>
-
-        <h1 className="completion-title">You did it.</h1>
-
-        <p className="completion-message">
-          Seriously, thank you for taking the time to share all of this. We're
-          going to dig into your answers and follow up with any clarifying
-          questions. If we need to meet, we'll send a link. Talk soon.
-        </p>
+        {status === 'submitting' ? (
+          <>
+            <div className="completion-celebration">
+              <span className="completion-spinner" />
+            </div>
+            <h1 className="completion-title">Submitting your responses...</h1>
+            <p className="completion-message">
+              Hang tight. We're saving everything to our system.
+            </p>
+          </>
+        ) : status === 'error' ? (
+          <>
+            <div className="completion-celebration">
+              <span className="completion-emoji">{'\u{26A0}\u{FE0F}'}</span>
+            </div>
+            <h1 className="completion-title">Something went wrong.</h1>
+            <p className="completion-message">
+              Your answers are saved locally and in our system. The final submission
+              didn't go through, but don't worry, nothing is lost.
+            </p>
+            <button className="btn btn-primary" onClick={onRetry} type="button">
+              Try again
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="completion-celebration">
+              <span className="completion-emoji">{'\u{1F389}'}</span>
+            </div>
+            <h1 className="completion-title">You did it.</h1>
+            <p className="completion-message">
+              Seriously, thank you for taking the time to share all of this. We're
+              going to dig into your answers and follow up with any clarifying
+              questions. If we need to meet, we'll send a link. Talk soon.
+            </p>
+          </>
+        )}
 
         <div className="completion-logo">
           <img
@@ -55,6 +80,19 @@ export default function CompletionScreen() {
 
         .completion-emoji {
           font-size: 3.5rem;
+        }
+
+        .completion-spinner {
+          width: 40px;
+          height: 40px;
+          border: 3px solid var(--border);
+          border-top-color: var(--accent);
+          border-radius: 50%;
+          animation: spin 800ms linear infinite;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
 
         .completion-title {

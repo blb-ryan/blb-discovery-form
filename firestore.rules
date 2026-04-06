@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Discovery sessions: anonymous users can create and update (form saves)
+    // Read allowed (UUID acts as bearer token for session resume)
+    // Delete not allowed
+    match /discovery_sessions/{sessionId} {
+      allow create, update: if true;
+      allow read: if true;
+      allow delete: if false;
+    }
+
+    // Magic link rate limits: only server (Admin SDK) writes here
+    // Client access fully denied
+    match /magic_link_rate_limits/{doc} {
+      allow read, write: if false;
+    }
+
+    // Default: deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
