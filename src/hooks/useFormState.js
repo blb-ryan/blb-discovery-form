@@ -29,6 +29,8 @@ export function useFormState() {
   const [iDontKnowCount, setIDontKnowCount] = useState(saved.current?.iDontKnowCount || 0);
   const [sectionIndex, setSectionIndex] = useState(saved.current?.sectionIndex || 0);
   const [questionIndex, setQuestionIndex] = useState(saved.current?.questionIndex || 0);
+  // Always show welcome on page load — returning users see "Continue where you left off"
+  const [showWelcome, setShowWelcome] = useState(true);
   const [showSectionIntro, setShowSectionIntro] = useState(
     saved.current ? false : true
   );
@@ -46,8 +48,9 @@ export function useFormState() {
       sectionIndex,
       questionIndex,
       sessionId,
+      started: !showWelcome,
     });
-  }, [answers, iDontKnowCount, sectionIndex, questionIndex, sessionId]);
+  }, [answers, iDontKnowCount, sectionIndex, questionIndex, sessionId, showWelcome]);
 
   const currentSection = sections[sectionIndex];
   const visibleQuestions = getVisibleQuestions(sectionIndex, answers);
@@ -160,6 +163,12 @@ export function useFormState() {
     [answers]
   );
 
+  const dismissWelcome = useCallback(() => {
+    setShowWelcome(false);
+  }, []);
+
+  const hasProgress = Object.keys(answers).length > 0;
+
   // Restore from external data (Firestore session)
   const restoreState = useCallback((data) => {
     if (data.answers) setAnswers(data.answers);
@@ -175,6 +184,7 @@ export function useFormState() {
     iDontKnowCount,
     sectionIndex,
     questionIndex,
+    showWelcome,
     showSectionIntro,
     isComplete,
     direction,
@@ -187,6 +197,7 @@ export function useFormState() {
     progress,
     totalVisible,
     answeredCount,
+    hasProgress,
 
     // Actions
     setAnswer,
@@ -195,5 +206,6 @@ export function useFormState() {
     goToSection,
     isSectionComplete,
     restoreState,
+    dismissWelcome,
   };
 }

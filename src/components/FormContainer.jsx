@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useFormState } from '../hooks/useFormState';
 import { useFirestore } from '../hooks/useFirestore';
+import Header from './Header';
+import WelcomeScreen from './WelcomeScreen';
 import Question from './Question';
 import SectionIntro from './SectionIntro';
 import ProgressBar from './ProgressBar';
@@ -13,6 +15,7 @@ export default function FormContainer() {
     iDontKnowCount,
     sectionIndex,
     questionIndex,
+    showWelcome,
     showSectionIntro,
     isComplete,
     direction,
@@ -21,12 +24,14 @@ export default function FormContainer() {
     currentQuestion,
     visibleQuestions,
     progress,
+    hasProgress,
     setAnswer,
     goNext,
     goBack,
     goToSection,
     isSectionComplete,
     restoreState,
+    dismissWelcome,
   } = useFormState();
 
   // Firestore session persistence (gracefully no-ops without config)
@@ -48,10 +53,20 @@ export default function FormContainer() {
     return <CompletionScreen />;
   }
 
+  if (showWelcome) {
+    return (
+      <>
+        <Header />
+        <WelcomeScreen onStart={dismissWelcome} hasProgress={hasProgress} />
+      </>
+    );
+  }
+
   const hasEmail = answers.contact_email && answers.contact_email.includes('@');
 
   return (
     <div className="form-container">
+      <Header minimal />
       <ProgressBar
         progress={progress}
         sectionIndex={sectionIndex}
@@ -102,7 +117,7 @@ export default function FormContainer() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-top: 48px; /* space for fixed progress bar */
+          padding-top: 88px; /* space for header + progress bar */
         }
       `}</style>
     </div>

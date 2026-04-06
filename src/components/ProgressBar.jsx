@@ -48,7 +48,7 @@ export default function ProgressBar({
       <style>{`
         .progress-container {
           position: fixed;
-          top: 0;
+          top: 44px;
           left: 0;
           right: 0;
           z-index: var(--z-progress);
