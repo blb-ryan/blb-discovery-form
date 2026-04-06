@@ -2,13 +2,15 @@ export default function WelcomeScreen({ onStart, hasProgress }) {
   return (
     <div className="welcome-screen fade-in">
       <div className="welcome-content">
-        <img
-          src={`${import.meta.env.BASE_URL}blb-logo-white.svg`}
-          alt="Brave Little Beast"
-          className="welcome-logo"
-        />
-
-        <h1 className="welcome-title">Business Discovery</h1>
+        <div className="welcome-header">
+          <img
+            src={`${import.meta.env.BASE_URL}blb-logo-white.svg`}
+            alt="Brave Little Beast"
+            className="welcome-logo"
+          />
+          <div className="welcome-divider" />
+          <h1 className="welcome-title">Business Discovery</h1>
+        </div>
 
         <p className="welcome-body">
           This questionnaire is how we get to know your business, your market,
@@ -72,18 +74,31 @@ export default function WelcomeScreen({ onStart, hasProgress }) {
           gap: var(--space-lg);
         }
 
+        .welcome-header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: var(--space-lg);
+          margin-bottom: var(--space-sm);
+        }
+
         .welcome-logo {
-          width: 220px;
+          width: 240px;
           height: auto;
-          margin-bottom: var(--space-md);
-          opacity: 0.9;
+        }
+
+        .welcome-divider {
+          width: 40px;
+          height: 1px;
+          background: var(--border);
         }
 
         .welcome-title {
-          font-size: 2.25rem;
-          font-weight: var(--font-weight-bold);
-          color: var(--text-primary);
-          letter-spacing: -0.02em;
+          font-size: 1.125rem;
+          font-weight: var(--font-weight-semibold);
+          color: var(--accent);
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
         }
 
         .welcome-body {
@@ -141,11 +156,11 @@ export default function WelcomeScreen({ onStart, hasProgress }) {
           }
 
           .welcome-logo {
-            width: 160px;
+            width: 180px;
           }
 
           .welcome-title {
-            font-size: 1.75rem;
+            font-size: 1rem;
           }
 
           .welcome-body {

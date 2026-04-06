@@ -54,12 +54,7 @@ export default function FormContainer() {
   }
 
   if (showWelcome) {
-    return (
-      <>
-        <Header />
-        <WelcomeScreen onStart={dismissWelcome} hasProgress={hasProgress} />
-      </>
-    );
+    return <WelcomeScreen onStart={dismissWelcome} hasProgress={hasProgress} />;
   }
 
   const hasEmail = answers.contact_email && answers.contact_email.includes('@');

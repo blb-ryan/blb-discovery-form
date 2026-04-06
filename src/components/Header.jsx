@@ -39,17 +39,17 @@ export default function Header({ minimal }) {
         .header-logo {
           height: 28px;
           width: auto;
-          opacity: 0.6;
+          opacity: 1;
           transition: opacity var(--transition-fast);
         }
 
         .header-logo-link:hover .header-logo {
-          opacity: 0.9;
+          opacity: 0.8;
         }
 
         .header-minimal .header-logo {
           height: 22px;
-          opacity: 0.4;
+          opacity: 0.7;
         }
 
         @media (max-width: 600px) {
