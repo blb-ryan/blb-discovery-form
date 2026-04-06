@@ -173,6 +173,11 @@ select option {
   border-width: 0;
 }
 
+/* Hide reCAPTCHA v3 badge (required disclosure is in the form's privacy context) */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
