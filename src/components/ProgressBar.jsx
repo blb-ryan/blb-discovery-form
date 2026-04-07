@@ -1,5 +1,15 @@
 import { sections } from '../utils/questionData';
 
+const BUILD_TIME = (() => {
+  try {
+    const d = new Date(__BUILD_TIME__);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      + ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  } catch {
+    return null;
+  }
+})();
+
 export default function ProgressBar({
   progress,
   sectionIndex,
@@ -20,9 +30,16 @@ export default function ProgressBar({
 
         <span className="progress-section-name">{sectionName}</span>
 
-        <span className="progress-percent">
-          {Math.round(progress * 100)}%
-        </span>
+        <div className="progress-right">
+          <span className="progress-percent">
+            {Math.round(progress * 100)}%
+          </span>
+          {BUILD_TIME && (
+            <span className="progress-build-time" title="Last deployed">
+              {BUILD_TIME}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="progress-bar-track">
@@ -77,11 +94,26 @@ export default function ProgressBar({
           transform: translateX(-50%);
         }
 
+        .progress-right {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 1px;
+          flex-shrink: 0;
+        }
+
         .progress-percent {
           font-size: 0.6875rem;
           font-weight: var(--font-weight-semibold);
           color: var(--text-dim);
-          flex-shrink: 0;
+        }
+
+        .progress-build-time {
+          font-size: 0.5625rem;
+          color: var(--text-dim);
+          opacity: 0.45;
+          letter-spacing: 0.02em;
+          white-space: nowrap;
         }
 
         .progress-bar-track {
