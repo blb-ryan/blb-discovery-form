@@ -149,7 +149,8 @@ function getEmojiForSection(number) {
     '09': '\u{1F4E3}',
     '10': '\u{1F3AF}',
     '11': '\u{2728}',
-    '12': '\u{1F3C6}',
+    '12': '\u{1F441}',
+    '13': '\u{1F3C6}',
   };
   return map[number] || '\u{2728}';
 }

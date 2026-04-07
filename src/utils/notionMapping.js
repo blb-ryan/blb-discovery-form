@@ -50,6 +50,16 @@ export function buildNotionProperties(answers, iDontKnowCount) {
 }
 
 /**
+ * Render a dot-visualization of a 1-5 spectrum value.
+ * e.g. value=3 → ○○●○○
+ */
+function renderSpectrumDots(value) {
+  const v = parseInt(value, 10);
+  if (isNaN(v)) return '○○○○○';
+  return [1, 2, 3, 4, 5].map((i) => (i === v ? '●' : '○')).join('');
+}
+
+/**
  * Build the Notion page body content (markdown) from all answers.
  */
 export function buildNotionContent(answers) {
@@ -59,11 +69,50 @@ export function buildNotionContent(answers) {
   lines.push('');
 
   sections.forEach((section) => {
-    const sectionAnswers = section.questions
-      .filter((q) => {
+    // ── Brand Personality: spectrum table + open-ended ─────────────
+    if (section.id === 'brand_personality') {
+      const spectrumQs = section.questions.filter((q) => q.type === 'spectrum');
+      const textQs = section.questions.filter((q) => q.type !== 'spectrum');
+
+      const hasAnyAnswer =
+        spectrumQs.some((q) => answers[q.id]) ||
+        textQs.some((q) => answers[q.id] !== undefined && answers[q.id] !== '');
+
+      if (!hasAnyAnswer) return;
+
+      lines.push(`## ${section.number}. ${section.name}`);
+      lines.push('');
+
+      const answeredSpectra = spectrumQs.filter((q) => answers[q.id]);
+      if (answeredSpectra.length > 0) {
+        lines.push('### Personality Spectrum');
+        lines.push('| Spectrum | | Score |');
+        lines.push('|---|---|---|');
+        answeredSpectra.forEach((q) => {
+          const val = answers[q.id];
+          const dots = renderSpectrumDots(val);
+          lines.push(`| ${q.leftLabel} — ${q.rightLabel} | ${dots} | ${val} |`);
+        });
+        lines.push('');
+      }
+
+      textQs.forEach((q) => {
         const val = answers[q.id];
-        return val !== undefined && val !== '';
+        if (val === undefined || val === '') return;
+        lines.push(`### ${q.text}`);
+        lines.push('');
+        lines.push(val);
+        lines.push('');
       });
+
+      return;
+    }
+
+    // ── Default section formatting ─────────────────────────────────
+    const sectionAnswers = section.questions.filter((q) => {
+      const val = answers[q.id];
+      return val !== undefined && val !== '';
+    });
 
     if (sectionAnswers.length === 0) return;
 

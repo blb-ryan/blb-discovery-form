@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import SpectrumSlider from './SpectrumSlider';
 
 const IDK_VALUE = "I don't know yet";
 
@@ -79,6 +80,99 @@ export default function Question({
 
   // Animation class based on direction
   const animClass = direction === 'back' ? 'question-back' : 'question';
+
+  // ── Spectrum slider layout ─────────────────────────────────────
+  if (question.type === 'spectrum') {
+    return (
+      <div
+        ref={animRef}
+        className={`question-wrapper ${animClass}-enter-active`}
+        key={question.id}
+      >
+        <div className="question-meta">
+          <span className="question-section-number">{sectionNumber}</span>
+          <span className="question-counter">
+            {questionNumber} of {totalInSection}
+          </span>
+        </div>
+
+        <SpectrumSlider
+          leftLabel={question.leftLabel}
+          rightLabel={question.rightLabel}
+          value={value || ''}
+          onSelect={(val) => {
+            onChange(question.id, val);
+            setTimeout(onNext, 400);
+          }}
+        />
+
+        <div className="question-actions">
+          <div />
+          <div className="question-nav">
+            <button
+              className="btn btn-text question-back-btn"
+              onClick={onBack}
+              type="button"
+              aria-label="Previous question"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <style>{`
+          .question-wrapper {
+            max-width: var(--max-width);
+            width: 100%;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 60vh;
+          }
+          .question-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+          }
+          .question-section-number {
+            font-size: 0.6875rem;
+            font-weight: var(--font-weight-semibold);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+          }
+          .question-counter {
+            font-size: 0.6875rem;
+            font-weight: var(--font-weight-medium);
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+          }
+          .question-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+          }
+          .question-nav {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+          }
+          .question-back-btn {
+            min-width: 44px;
+            min-height: 44px;
+            padding: var(--space-sm);
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   const renderInput = () => {
     const baseProps = {
@@ -181,10 +275,12 @@ export default function Question({
 
       <h2 className="question-text">{question.text}</h2>
 
+      {question.subtitle && (
+        <p className="question-subtitle">{question.subtitle}</p>
+      )}
+
       {question.type === 'textarea' && (
-        <p className="question-hint">
-          {question.type === 'textarea' && 'Press Cmd+Enter to continue'}
-        </p>
+        <p className="question-hint">Press Cmd+Enter to continue</p>
       )}
 
       <div className="question-input-wrapper">
@@ -285,6 +381,14 @@ export default function Question({
           line-height: 1.4;
           color: var(--text-primary);
           margin-bottom: var(--space-sm);
+        }
+
+        .question-subtitle {
+          font-size: 0.875rem;
+          color: var(--text-muted);
+          line-height: 1.55;
+          margin-bottom: var(--space-md);
+          font-style: italic;
         }
 
         .question-hint {

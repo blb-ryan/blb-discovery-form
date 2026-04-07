@@ -26,7 +26,7 @@ export default function WelcomeScreen({ onStart, hasProgress, onReset }) {
         <div className="welcome-details">
           <div className="welcome-detail">
             <span className="welcome-detail-icon">{'\u{1F4CB}'}</span>
-            <span>12 sections covering your business, brand, and goals</span>
+            <span>13 sections covering your business, brand, and goals</span>
           </div>
           <div className="welcome-detail">
             <span className="welcome-detail-icon">{'\u{1F4BE}'}</span>
