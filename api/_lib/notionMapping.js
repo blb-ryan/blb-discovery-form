@@ -124,7 +124,7 @@ export function buildNotionProperties(answers, iDontKnowCount) {
     'Status': 'New',
   };
 
-  if (answers.deadline) {
+  if (answers.deadline && answers.deadline !== "I don't know yet") {
     properties['date:Deadline:start'] = answers.deadline;
   }
 
