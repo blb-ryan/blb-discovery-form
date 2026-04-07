@@ -1,4 +1,4 @@
-export default function CompletionScreen({ status, onRetry }) {
+export default function CompletionScreen({ status, onRetry, onReset }) {
   return (
     <div className="completion-screen celebrate-in">
       <div className="completion-content">
@@ -38,6 +38,20 @@ export default function CompletionScreen({ status, onRetry }) {
               questions. If we need to meet, we'll send a link. Talk soon.
             </p>
           </>
+        )}
+
+        {status === 'success' && onReset && (
+          <button
+            className="completion-reset-btn"
+            onClick={() => {
+              if (window.confirm('This will clear all your answers and start a brand new form. Are you sure?')) {
+                onReset();
+              }
+            }}
+            type="button"
+          >
+            Start a new discovery
+          </button>
         )}
 
         <div className="completion-logo">
@@ -106,6 +120,23 @@ export default function CompletionScreen({ status, onRetry }) {
           color: var(--text-muted);
           line-height: 1.7;
           max-width: 440px;
+        }
+
+        .completion-reset-btn {
+          background: none;
+          border: none;
+          color: var(--text-dim);
+          font-family: var(--font-family);
+          font-size: 0.8125rem;
+          cursor: pointer;
+          padding: var(--space-sm) var(--space-md);
+          transition: color var(--transition-fast);
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+
+        .completion-reset-btn:hover {
+          color: var(--text-muted);
         }
 
         .completion-logo {

@@ -36,7 +36,7 @@ export function useFormState() {
   );
   const [isComplete, setIsComplete] = useState(false);
   const [direction, setDirection] = useState('forward'); // 'forward' | 'back'
-  const [sessionId] = useState(
+  const [sessionId, setSessionId] = useState(
     saved.current?.sessionId || crypto.randomUUID()
   );
 
@@ -167,6 +167,18 @@ export function useFormState() {
     setShowWelcome(false);
   }, []);
 
+  const resetForm = useCallback(() => {
+    setAnswers({});
+    setIDontKnowCount(0);
+    setSectionIndex(0);
+    setQuestionIndex(0);
+    setShowWelcome(true);
+    setShowSectionIntro(true);
+    setIsComplete(false);
+    setSessionId(crypto.randomUUID());
+    localStorage.removeItem(STORAGE_KEY);
+  }, []);
+
   const hasProgress = Object.keys(answers).length > 0;
 
   // Restore from external data (Firestore session)
@@ -207,5 +219,6 @@ export function useFormState() {
     isSectionComplete,
     restoreState,
     dismissWelcome,
+    resetForm,
   };
 }

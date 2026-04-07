@@ -1,4 +1,4 @@
-export default function WelcomeScreen({ onStart, hasProgress }) {
+export default function WelcomeScreen({ onStart, hasProgress, onReset }) {
   return (
     <div className="welcome-screen fade-in">
       <div className="welcome-content">
@@ -50,9 +50,22 @@ export default function WelcomeScreen({ onStart, hasProgress }) {
         </button>
 
         {hasProgress && (
-          <p className="welcome-resume-note">
-            We saved your progress from last time.
-          </p>
+          <>
+            <p className="welcome-resume-note">
+              We saved your progress from last time.
+            </p>
+            <button
+              className="welcome-reset-btn"
+              onClick={() => {
+                if (window.confirm('This will clear all your answers and start a brand new form. Are you sure?')) {
+                  onReset();
+                }
+              }}
+              type="button"
+            >
+              Start over with a blank form
+            </button>
+          </>
         )}
       </div>
 
@@ -148,6 +161,23 @@ export default function WelcomeScreen({ onStart, hasProgress }) {
           font-size: 0.8125rem;
           color: var(--accent);
           font-weight: var(--font-weight-medium);
+        }
+
+        .welcome-reset-btn {
+          background: none;
+          border: none;
+          color: var(--text-dim);
+          font-family: var(--font-family);
+          font-size: 0.75rem;
+          cursor: pointer;
+          padding: var(--space-xs) var(--space-sm);
+          transition: color var(--transition-fast);
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+
+        .welcome-reset-btn:hover {
+          color: var(--text-muted);
         }
 
         @media (max-width: 600px) {

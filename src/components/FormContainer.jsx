@@ -33,6 +33,7 @@ export default function FormContainer() {
     isSectionComplete,
     restoreState,
     dismissWelcome,
+    resetForm,
   } = useFormState();
 
   // Firestore session persistence (gracefully no-ops without config)
@@ -85,15 +86,15 @@ export default function FormContainer() {
         onRetry={() => {
           hasSubmitted.current = false;
           setSubmissionStatus('idle');
-          // Re-trigger by toggling
           setTimeout(() => { hasSubmitted.current = false; }, 0);
         }}
+        onReset={resetForm}
       />
     );
   }
 
   if (showWelcome) {
-    return <WelcomeScreen onStart={dismissWelcome} hasProgress={hasProgress} />;
+    return <WelcomeScreen onStart={dismissWelcome} hasProgress={hasProgress} onReset={resetForm} />;
   }
 
   const hasEmail = answers.contact_email && answers.contact_email.includes('@');
