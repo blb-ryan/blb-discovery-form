@@ -65,8 +65,8 @@ export default async function handler(req, res) {
     try {
       notionPageUrl = await createDiscoveryPage(properties, markdownContent);
     } catch (notionErr) {
-      console.error('[submit-discovery] Notion API error:', notionErr);
-      return res.status(500).json({ error: 'Failed to create Notion page' });
+      console.error('[submit-discovery] Notion API error:', notionErr.message, notionErr.body || notionErr.code || '');
+      return res.status(500).json({ error: 'Failed to create Notion page', detail: notionErr.message });
     }
 
     // Send notification email to BLB team
